@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { FurnitureModule } from './furniture/furniture.module';
 import { ComboModule } from './combo/combo.module';
 import { ComboitemModule } from './comboitem/comboitem.module';
+import { RentalModule } from './rental/rental.module';
 
 @Module({
-  imports: [FurnitureModule, ComboModule, ComboitemModule],
+  imports: [FurnitureModule, ComboModule, ComboitemModule, RentalModule],
   controllers: [AppController],
   providers: [AppService],
 })
