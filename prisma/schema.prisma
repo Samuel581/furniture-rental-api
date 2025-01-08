@@ -51,5 +51,8 @@ model Renter {
   id      String   @id @default(uuid())
   name    String
   contact String
+  latitude Float
+  longitude Float
+  reference String
   rentals Rental[]
 }
