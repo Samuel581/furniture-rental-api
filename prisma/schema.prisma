@@ -14,45 +14,96 @@ datasource db {
 }
 
 model Furniture {
-  id         String      @id @default(uuid())
-  name       String
-  stock      Int
-  price      Float
-  comboItems ComboItem[]
-  rentals    Rental[]
+  id             String           @id @default(uuid())
+  name           String
+  stock          Int
+  dailyRate      Decimal          @db.Decimal(10, 2)
+  isActive       Boolean
+  comboFurniture ComboFurniture[]
+  rentalItem     RentalItem[]
+
+  @@map("furniture")
 }
 
 model Combo {
-  id    String      @id @default(uuid())
-  name  String
-  items ComboItem[]
+  id        String  @id @default(uuid())
+  name      String
+  dailyRate Float
+  isActive  Boolean
+
+  // Relations
+  ComboFurniture ComboFurniture[]
+  RentalItem     RentalItem[]
+
+  @@map("combos")
 }
 
-model ComboItem {
-  id          String    @id @default(uuid())
+model ComboFurniture {
+  id          String @id @default(uuid())
+  quantity    Int
   comboId     String
   furnitureId String
-  quantiry    Int
-  combo       Combo     @relation(fields: [comboId], references: [id])
-  furniture   Furniture @relation(fields: [furnitureId], references: [id])
+
+  // Relations
+  combo     Combo     @relation(fields: [comboId], references: [id])
+  furniture Furniture @relation(fields: [furnitureId], references: [id])
+
+  @@map("combo_furniture")
+}
+
+model Client {
+  id               String  @id @default(uuid())
+  name             String
+  phone            String
+  latitude         Int
+  longitude        Int
+  addressReference String
+  notes            String?
+  isActive         Boolean @default(true)
+
+  // Relations
+  rentals Rental[]
+
+  @@map("clients")
 }
 
 model Rental {
-  id        String      @id @default(uuid())
-  renterId  String
-  furniture Furniture[]
-  startDate DateTime
-  endDate   DateTime
-  status    String
-  Renter    Renter      @relation(fields: [renterId], references: [id])
+  id                       String       @id @default(uuid())
+  clientId                 String
+  startDate                DateTime
+  endDate                  DateTime
+  rentalStatus             RentalStatus @default(PENDING)
+  totalAmount              Decimal      @db.Decimal(10, 2)
+  depositAmount            Decimal      @db.Decimal(10, 2)
+  notes                    String?
+  secondaryDeliveryAddress String?
+
+  // Relations
+  client      Client       @relation(fields: [clientId], references: [id])
+  rentalItems RentalItem[]
+
+  @@map("rentals")
 }
 
-model Renter {
-  id      String   @id @default(uuid())
-  name    String
-  contact String
-  latitude Float
-  longitude Float
-  reference String
-  rentals Rental[]
+model RentalItem {
+  id          String  @id @default(uuid())
+  rentalId    String
+  quantity    Int
+  dailyRate   Decimal @db.Decimal(10, 2)
+  furnitureId String?
+  comboId     String?
+
+  // Relations
+  rental    Rental     @relation(fields: [rentalId], references: [id])
+  furniture Furniture? @relation(fields: [furnitureId], references: [id])
+  combo     Combo?      @relation(fields: [comboId], references: [id])
+
+  @@map("rental_items")
+}
+
+enum RentalStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
 }
