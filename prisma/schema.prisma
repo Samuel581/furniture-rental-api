@@ -55,8 +55,8 @@ model Client {
   id               String  @id @default(uuid())
   name             String
   phone            String
-  latitude         Int
-  longitude        Int
+  latitude         Float
+  longitude        Float
   addressReference String
   notes            String?
   isActive         Boolean @default(true)

@@ -1,10 +1,8 @@
-import { IsBoolean, IsLatitude, IsLongitude, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsBoolean, IsLatitude, IsLongitude, IsOptional, IsString, IsUUID, Length } from "class-validator";
 
 export class CreateClientDto {
-    @IsUUID()
-    id: string;
-
     @IsString()
+    @Length(3, 30)
     name: string;
 
     @IsString()
@@ -17,11 +15,13 @@ export class CreateClientDto {
     longitude: number;
 
     @IsString()
+    @Length(10, 200)
     addressReference: string;
 
     @IsString()
     @IsOptional()
-    notes: string;
+    @Length(10, 1000)
+    notes?: string;
 
     @IsBoolean()
     isActive: boolean;
