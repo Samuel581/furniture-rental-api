@@ -16,6 +16,8 @@ datasource db {
 model Furniture {
   id             String           @id @default(uuid())
   name           String
+  color          String?
+  type           String
   stock          Int
   dailyRate      Decimal          @db.Decimal(10, 2)
   isActive       Boolean
@@ -96,7 +98,7 @@ model RentalItem {
   // Relations
   rental    Rental     @relation(fields: [rentalId], references: [id])
   furniture Furniture? @relation(fields: [furnitureId], references: [id])
-  combo     Combo?      @relation(fields: [comboId], references: [id])
+  combo     Combo?     @relation(fields: [comboId], references: [id])
 
   @@map("rental_items")
 }

@@ -1,4 +1,4 @@
-import { IsBoolean, IsLatitude, IsLongitude, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import { IsBoolean, IsLatitude, IsLongitude, IsOptional, IsString, Length } from "class-validator";
 
 export class CreateClientDto {
     @IsString()

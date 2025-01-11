@@ -18,22 +18,27 @@ export class ClientService {
     return this.prisma.client.findMany();
   }
 
-  findOne(id: string): Promise<Client | null> {
+  async findOne(id: string): Promise<Client | null> {
     return this.prisma.client.findUnique({
       where: { id },
     });
   }
 
-  update(id: string, updateClientDto: UpdateClientDto): Promise<Client | null>{
+  async update(id: string, updateClientDto: UpdateClientDto): Promise<Client | null>{
     return this.prisma.client.update({
       where: { id },
       data: { ...updateClientDto }
     })
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.prisma.client.delete({
       where: { id }
     })
+  }
+
+  //TODO
+  async findAllWithRentals(){
+    return true;
   }
 }
