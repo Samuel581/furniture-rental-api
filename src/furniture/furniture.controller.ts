@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { FurnitureService } from './furniture.service';
 import { CreateFurnitureDto } from './dto/create-furniture.dto';
 import { UpdateFurnitureDto } from './dto/update-furniture.dto';
@@ -18,17 +18,17 @@ export class FurnitureController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.furnitureService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.furnitureService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFurnitureDto: UpdateFurnitureDto) {
-    return this.furnitureService.update(+id, updateFurnitureDto);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateFurnitureDto: UpdateFurnitureDto) {
+    return this.furnitureService.update(id, updateFurnitureDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.furnitureService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.furnitureService.remove(id);
   }
 }

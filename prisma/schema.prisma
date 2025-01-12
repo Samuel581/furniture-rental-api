@@ -20,7 +20,7 @@ model Furniture {
   type           String
   stock          Int
   dailyRate      Decimal          @db.Decimal(10, 2)
-  isActive       Boolean
+  isActive       Boolean          @default(true)
   comboFurniture ComboFurniture[]
   rentalItem     RentalItem[]
 

@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFurnitureDto } from './dto/create-furniture.dto';
 import { UpdateFurnitureDto } from './dto/update-furniture.dto';
+import { PrismaService } from 'src/prisma.service';
+import { Furniture } from '@prisma/client';
 
 @Injectable()
 export class FurnitureService {
-  create(createFurnitureDto: CreateFurnitureDto) {
-    return 'This action adds a new furniture';
+  constructor(private prisma: PrismaService){}
+
+  async create(createFurnitureDto: CreateFurnitureDto): Promise<Furniture | null> {
+    return this.prisma.furniture.create({
+      data: createFurnitureDto ,
+    });
   }
 
-  findAll() {
-    return `This action returns all furniture`;
+  async findAll() {
+    return this.prisma.furniture.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} furniture`;
+  async findOne(id: string) {
+    return this.prisma.furniture.findUnique({
+      where: {id}
+    });
   }
 
-  update(id: number, updateFurnitureDto: UpdateFurnitureDto) {
-    return `This action updates a #${id} furniture`;
+  async update(id: string, updateFurnitureDto: UpdateFurnitureDto) {
+    return this.prisma.furniture.update({
+      where: { id },
+      data: { ...updateFurnitureDto }
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} furniture`;
+  remove(id: string) {
+    return this.prisma.furniture.delete({
+      where: { id }
+    });
   }
 }
