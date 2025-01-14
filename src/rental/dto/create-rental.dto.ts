@@ -20,15 +20,18 @@ export class CreateRentalDto {
     @IsUUID()
     clientId: string;
 
+    @Type(() => Date)
     @IsDate()
     startDate: string;
 
+    @Type(() => Date)
     @IsDate()
     endDate: string;
 
+    @IsOptional()
     @IsNumber()
     @Min(0)
-    depositAmount: number;
+    depositAmount?: number;
 
     @IsString()
     @IsOptional()

@@ -132,8 +132,21 @@ export class RentalService {
           totalAmount,
           notes: createRentalDto.notes,
           secondaryDeliveryAddress: createRentalDto.secondaryDeliveryAddress,
+          //TODO: Check and explain how this work
           rentalItems: {
-            create: rentalItemsData
+            create: rentalItemsData.map(item => ({
+              quantity: item.quantity,
+              ...(item.furnitureId ? {
+                furniture: {
+                  connect: { id: item.furnitureId}
+                }
+              }: {}),
+              ...(item.comboId ? {
+                combo: {
+                  connect: { id: item.comboId}
+                }
+              }: {})
+            }))
           }
         },
         include: {
