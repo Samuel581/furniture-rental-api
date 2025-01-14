@@ -74,9 +74,9 @@ model Rental {
   clientId                 String
   startDate                DateTime
   endDate                  DateTime
-  rentalStatus             RentalStatus @default(PENDING)
-  totalAmount              Decimal      @db.Decimal(10, 2)
-  depositAmount            Decimal?      @db.Decimal(10, 2)
+  rentalStatus             RentalStatus @default(RESERVED)
+  totalAmount              Decimal      @db.Decimal(10, 2) 
+  depositAmount            Decimal?      @db.Decimal(10, 2) @default(0)
   notes                    String?
   secondaryDeliveryAddress String?
 
@@ -103,8 +103,8 @@ model RentalItem {
 }
 
 enum RentalStatus {
-  PENDING
-  ACTIVE
+  RESERVED
+  DELIVERED
   COMPLETED
   CANCELLED
 }

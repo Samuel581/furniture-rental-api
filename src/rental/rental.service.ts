@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateRentalDto } from './dto/create-rental.dto';
 import { UpdateRentalDto } from './dto/update-rental.dto';
 import { PrismaService } from 'src/prisma.service';
-
+import {  RentalStatus } from '@prisma/client';
 @Injectable()
 export class RentalService {
 
@@ -164,12 +164,96 @@ export class RentalService {
     
   }
 
-  findAll() {
-    return `This action returns all rental`;
+  async markDelivered(id: string){
+    return this.prisma.rental.update({
+      where: { id: id },
+      data: {
+        rentalStatus: RentalStatus.DELIVERED
+      }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} rental`;
+  async markDone(id: string){
+    const rental = await this.findOne(id);
+
+    // Validating the rental status
+    if(rental.rentalStatus !== RentalStatus.DELIVERED){
+      throw new BadRequestException(
+        `Cannot complete rental in ${rental.rentalStatus} status. Rental must be DELIVERED first.`
+      );
+    }
+
+    // Using transactions to ensure we restock the furniture
+    return await this.prisma.$transaction(async (tx) => {
+
+      // Updating the status
+      const updatedRental = tx.rental.update({
+        where: { id:id },
+        data: { rentalStatus: RentalStatus.COMPLETED}
+      })
+
+      for(const rentalItem of rental.rentalItems){
+        // Check if the rental item is a furniture
+        if(rentalItem.furnitureId){
+          // Restocking
+          await tx.furniture.update({
+            where: { id: rentalItem.furnitureId },
+            data: {
+              stock: {
+                increment: rentalItem.quantity
+              }
+            }
+          })
+        }
+        // If not a solo furniture then is a combo
+        else if(rentalItem.comboId){
+          // Iterate the furnitures in the combo
+          for( const furnitureInCombo of rentalItem.combo.ComboFurniture ){
+            // NOTE: This was a bit buzzy
+            const totalRestockQuantity = rentalItem.quantity * furnitureInCombo.quantity;
+            // Restocking
+            await tx.furniture.update({
+              where: { id: furnitureInCombo.furnitureId },
+              data: {
+                stock: {
+                  increment: totalRestockQuantity,
+                }
+              }
+            })
+          }
+        }
+      }
+
+      // Returning the updated rental
+      return updatedRental;
+    })
+    
+  }
+
+  findOne(id: string) {
+    const rental = this.prisma.rental.findUnique({
+      where: { id: id },
+      include: {
+        rentalItems: {
+          include: {
+            furniture: true,
+            combo: {
+              include: {
+                ComboFurniture: {
+                  include: {
+                    furniture: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }      
+    });
+    if(!rental){
+      throw new BadRequestException(`Rental with id ${id} not found`)
+    } 
+    return rental;
   }
 
   update(id: number, updateRentalDto: UpdateRentalDto) {
