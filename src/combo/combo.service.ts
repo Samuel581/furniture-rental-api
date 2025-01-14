@@ -29,6 +29,7 @@ export class ComboService {
             }))
           }
         },
+        // Here we just include the combos furniture items created with it's furnitures atached to them
         include: {
           ComboFurniture: {
             include: {
