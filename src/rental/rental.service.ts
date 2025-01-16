@@ -256,7 +256,8 @@ export class RentalService {
     return rental;
   }
 
-  update(id: number, updateRentalDto: UpdateRentalDto) {
+  async markCanceled(id: number, updateRentalDto: UpdateRentalDto) {
+    // TODO: Make service
     return `This action updates a #${id} rental`;
   }
 
