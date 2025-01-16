@@ -26,7 +26,7 @@ export class RentalController {
     return this.rentalService.markDelivered(id)
   }
 
-  @Delete(':id/done')
+  @Patch(':id/done')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.rentalService.markDone(id)
   }

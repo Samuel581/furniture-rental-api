@@ -199,6 +199,13 @@ export class RentalService {
       );
     }
 
+    // Add validation to control if the rental is fully payed yet or not
+    if(rental.depositAmount < rental.totalAmount){
+      throw new BadRequestException(
+        `Cannot complete this rental. Total amount: ${rental.totalAmount} but ${rental.depositAmount} has been payed`
+      )
+    }
+
     // Using transactions to ensure we restock the furniture
     return await this.prisma.$transaction(async (tx) => {
 
