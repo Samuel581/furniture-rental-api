@@ -8,6 +8,22 @@ export class RentalService {
 
   constructor(private prisma: PrismaService){}
 
+  async findAllNotCancelled(){
+    return this.prisma.rental.findMany({
+      where: {
+        rentalStatus: RentalStatus.COMPLETED || RentalStatus.RESERVED || RentalStatus.DELIVERED
+      },
+      include: {
+        rentalItems: {
+          include: {
+            furniture: true,
+            combo: true
+          }
+        }
+      }
+    })
+  }
+
   async create(createRentalDto: CreateRentalDto) {
 
     const startDate = new Date(createRentalDto.startDate);
@@ -259,9 +275,5 @@ export class RentalService {
   async markCanceled(id: number, updateRentalDto: UpdateRentalDto) {
     // TODO: Make service
     return `This action updates a #${id} rental`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} rental`;
   }
 }

@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { RentalService } from './rental.service';
 import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
 
 @Controller('rental')
 export class RentalController {
@@ -13,22 +12,22 @@ export class RentalController {
   }
 
   @Get()
-  findAll() {
-    return this.rentalService.findAll();
+  findAllActive() {
+    return this.rentalService.findAllNotCancelled();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rentalService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.rentalService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRentalDto: UpdateRentalDto) {
-    return this.rentalService.update(+id, updateRentalDto);
+  @Patch(':id/deliver')
+  update(@Param('id', ParseUUIDPipe) id: string,) {
+    return this.rentalService.markDelivered(id)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rentalService.remove(+id);
+  @Delete(':id/done')
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.rentalService.markDone(id)
   }
 }
