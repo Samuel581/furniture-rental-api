@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { FurnitureService } from './furniture.service';
 import { CreateFurnitureDto } from './dto/create-furniture.dto';
 import { UpdateFurnitureDto } from './dto/update-furniture.dto';
+import { GetFurnituresQueryDto } from './dto/furniture-filtering.dto';
 
 @Controller('furniture')
 export class FurnitureController {
@@ -13,8 +14,8 @@ export class FurnitureController {
   }
 
   @Get()
-  findAll() {
-    return this.furnitureService.findAll();
+  findAll(@Query() query: GetFurnituresQueryDto) {
+    return this.furnitureService.findAll(query);
   }
 
   @Get(':id')

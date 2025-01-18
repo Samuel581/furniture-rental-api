@@ -1,5 +1,5 @@
 import { RentalStatus } from "@prisma/client";
-import { IsDateString, IsEnum, IsOptional } from "class-validator";
+import { IsDateString, IsEnum, IsInt, IsOptional } from "class-validator";
 
 export class GetRentalsQueryDto{
     @IsOptional()
@@ -13,4 +13,13 @@ export class GetRentalsQueryDto{
     @IsOptional()
     @IsDateString()
     endDate?: string;
+
+    @IsOptional()
+    @IsInt()
+    page?: number;
+
+    @IsOptional()
+    @IsInt()
+    limit?: number;
+
 }
