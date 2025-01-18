@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { RentalService } from './rental.service';
 import { CreateRentalDto } from './dto/create-rental.dto';
+import { GetRentalsQueryDto } from './dto/rental-filtering.dto';
 
 @Controller('rental')
 export class RentalController {
@@ -12,8 +13,13 @@ export class RentalController {
   }
 
   @Get()
-  findAllActive() {
-    return this.rentalService.findAllNotCancelled();
+  findAllActive(@Query() query: GetRentalsQueryDto) {
+    return this.rentalService.findAllNotCancelled(query);
+  }
+
+  @Get('/client/:id')
+  findByClientId(@Param('id', ParseUUIDPipe) id: string){
+    return this.rentalService.findManyByClientId(id);
   }
 
   @Get(':id')

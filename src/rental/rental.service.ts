@@ -2,17 +2,35 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateRentalDto } from './dto/create-rental.dto';
 import { UpdateRentalDto } from './dto/update-rental.dto';
 import { PrismaService } from 'src/prisma.service';
-import {  RentalStatus } from '@prisma/client';
+import {  Prisma, RentalStatus } from '@prisma/client';
+import { GetRentalsQueryDto } from './dto/rental-filtering.dto';
 @Injectable()
 export class RentalService {
 
   constructor(private prisma: PrismaService){}
 
-  async findAllNotCancelled(){
+  async findAllNotCancelled(query: GetRentalsQueryDto){
+    const filters: Prisma.RentalWhereInput = {}
+
+    // Filters bases on query
+    if(query.status){
+      filters.rentalStatus = query.status;
+    }
+
+    if(query.startDate){
+      filters.startDate = {
+        gte: new Date(query.startDate)
+      }
+    }
+
+    if(query.endDate){
+      filters.endDate = {
+        lte: new Date(query.endDate)
+      }
+    }
+
     return this.prisma.rental.findMany({
-      where: {
-        rentalStatus: RentalStatus.COMPLETED || RentalStatus.RESERVED || RentalStatus.DELIVERED
-      },
+      where: filters,
       include: {
         rentalItems: {
           include: {
@@ -21,6 +39,12 @@ export class RentalService {
           }
         }
       }
+    })
+  }
+
+  async findManyByClientId(id: string){
+    return this.prisma.rental.findMany({
+      where: { id: id }
     })
   }
 
@@ -279,8 +303,11 @@ export class RentalService {
     return rental;
   }
 
+  //TODO
   async markCanceled(id: number, updateRentalDto: UpdateRentalDto) {
     // TODO: Make service
     return `This action updates a #${id} rental`;
   }
+
+
 }
