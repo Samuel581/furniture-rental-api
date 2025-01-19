@@ -42,9 +42,17 @@ export class RentalService {
     })
   }
 
-  async findManyByClientId(id: string){
+  async findManyByClientId(idClient: string){
     return this.prisma.rental.findMany({
-      where: { id: id }
+      where: { clientId: idClient },
+      include: {
+        rentalItems: {
+          include: {
+            furniture: true,
+            combo: true,
+          }
+        }
+      }
     })
   }
 

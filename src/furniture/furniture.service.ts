@@ -73,9 +73,12 @@ export class FurnitureService {
     });
   }
 
-  remove(id: string) {
-    return this.prisma.furniture.delete({
-      where: { id }
+  async remove(id: string) {
+    return this.prisma.furniture.update({
+      where: { id },
+      data: {
+        isActive: false,
+      }
     });
   }
 }

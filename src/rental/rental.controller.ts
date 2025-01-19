@@ -17,9 +17,9 @@ export class RentalController {
     return this.rentalService.findAllNotCancelled(query);
   }
 
-  @Get('/client/:id')
-  findByClientId(@Param('id', ParseUUIDPipe) id: string){
-    return this.rentalService.findManyByClientId(id);
+  @Get('/client/:clientId')
+  findByClientId(@Param('clientId', ParseUUIDPipe) clientId: string){
+    return this.rentalService.findManyByClientId(clientId);
   }
 
   @Get(':id')
@@ -28,12 +28,12 @@ export class RentalController {
   }
 
   @Patch(':id/deliver')
-  update(@Param('id', ParseUUIDPipe) id: string,) {
+  deliver(@Param('id', ParseUUIDPipe) id: string,) {
     return this.rentalService.markDelivered(id)
   }
 
   @Patch(':id/done')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  done(@Param('id', ParseUUIDPipe) id: string) {
     return this.rentalService.markDone(id)
   }
 }
