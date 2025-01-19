@@ -22,77 +22,114 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# Furniture Rental API
+
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A NestJS based API for a furniture rental service, supports individial furniture pieces and predefined furniture sets (combos).
+
+## Features
+
+* Furniture inventory management
+* Combos inventory management
+* Client management
+* Rental lifecycle management
+* Stock tracking 
+* Location-based client information 
+
+## Tecnologies
+* NestJS
+* PostgreSQL
+* PrismaORM
+
+## Prerequisites
+
+* NodeJS (v18+)
+* PostgreSQL (v13+) (skip if using docker)
+* Docker (optional)
+* npm or yarn 
+
+## Installation
+
+1. Clone the repository
+
+```bash
+git clone [repo_url]
+```
+
+2. Install the dependencies
+
+```bash
+yarn install
+```
+3. Create a `.env` file in the root of the project and add the following environment variables:
+
+```bash
+DATABASE_URL="postgresql://user:password@localhost:5432/furniture_rental"
+```
+
+4. Run database migrations
+
+```bash
+npx prisma migrate dev
+```
+
+
 
 ## Project setup
 
+To install all the needed packages:
+
 ```bash
-$ yarn install
+yarn install
 ```
 
-## Compile and run the project
+## Running the app
 
 ```bash
 # development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
+yarn start:dev
 
 # production mode
-$ yarn run start:prod
+yarn start:prod
 ```
 
-## Run tests
+## API endpoints
 
-```bash
-# unit tests
-$ yarn run test
+### Furniture
 
-# e2e tests
-$ yarn run test:e2e
+* `GET /furniture` - Get all furniture items (supports filtering)
+* `GET /furniture/:id` - Get a single furniture item by ID
+* `POST /furniture` - Create a new furniture item
+* `PATCH /furniture/:id` - Update a furniture item
 
-# test coverage
-$ yarn run test:cov
-```
+### Combos
 
-## Deployment
+* `GET /combos` - Get all combos (supports filtering)
+* `GET /combos/:id` - Get a single combo by ID
+* `POST /combos` - Create a new combo
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Clients
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+* `GET /clients` - Get all clients (supports filtering)
+* `GET /clients/:id` - Get a single client by ID
+* `POST /clients` - Create a new client
+* `PATCH /clients/:id` - Update a client
 
-```bash
-$ yarn install -g mau
-$ mau deploy
-```
+### Rentals
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+* `GET /rentals` - Get all rentals (supports filtering)
+* `GET /rentals/client/:id` - Get all rentals for a specific client
+* `GET /rentals/:id` - Get a single rental by ID
+* `POST /rentals` - Create a new rental
+* `PATCH /rentals/:id/deliver` - Mark rental as delivered
+* `PATCH /rentals/:id/done` - Mark rental as done (restocks the items back to inventory)
+* `PATCH /rentals/:id/cancel` - Cancel a rental (restocks the items back to inventory) **(not implemented yet)**
 
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 
