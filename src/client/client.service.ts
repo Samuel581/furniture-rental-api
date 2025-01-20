@@ -32,8 +32,11 @@ export class ClientService {
   }
 
   async remove(id: string) {
-    return this.prisma.client.delete({
-      where: { id }
+    return this.prisma.client.update({
+      where: { id },
+      data: {
+        isActive: false,
+      }
     })
   }
 
