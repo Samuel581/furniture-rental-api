@@ -14,8 +14,8 @@ export class CreateClientDto {
         description: 'Phone number(s) of client',
         example: '+503 6789-1234'
     })
-    @IsString()
-    phone: string;
+    @IsString({each: true})
+    phone: string[];
 
     @ApiProperty({
         description: 'Latitude of rental location',

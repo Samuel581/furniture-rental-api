@@ -8,7 +8,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
   .setTitle('Furniture Rentals API')
-  .setDescription('')
+  .setDescription('  This API allows users to browse, rent, and manage furniture rentals. It provides endpoints for viewing available furniture, creating rental orders, updating rental details, and deleting rentals. The API ensures secure and efficient management of furniture rental operations.')
   .setVersion('1.0')
   .addTag('rental')
   .build();
@@ -17,12 +17,19 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, documentFactory);
 
+  app.enableCors({
+    origin: ['https://furniture-rental-client.vercel.app', 'http://localhost:3001'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATHC'],
+    credentials: true
+  })
+
   app.useGlobalPipes(
     new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     })
-    );
+  );
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
