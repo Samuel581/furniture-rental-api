@@ -18,7 +18,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, documentFactory);
 
   app.enableCors({
-    origin: ['https://furniture-rental-client.vercel.app', 'http://localhost:3001'],
+    origin: ['https://furniture-rental-client.vercel.app', 'http://localhost:3000', 'http://localhost:3001'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATHC'],
     credentials: true
   })
