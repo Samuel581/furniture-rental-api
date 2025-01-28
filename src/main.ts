@@ -20,7 +20,8 @@ async function bootstrap() {
   app.enableCors({
     origin: ['https://furniture-rental-client.vercel.app', 'http://localhost:3000', 'http://localhost:3001'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATHC'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 
   app.useGlobalPipes(
