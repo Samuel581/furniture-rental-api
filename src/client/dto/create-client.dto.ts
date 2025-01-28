@@ -51,5 +51,6 @@ export class CreateClientDto {
         example: true
     })
     @IsBoolean()
+    @IsOptional()
     isActive: boolean;
 }
