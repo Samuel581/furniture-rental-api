@@ -39,6 +39,7 @@ export class CreateFurnitureDto {
         example: true
     })
     @IsBoolean()
+    @IsOptional()
     isActive: boolean;
 
     @ApiProperty({

@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type, Transform } from "class-transformer";
 import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 
 
@@ -30,10 +30,12 @@ export class GetFurnituresQueryDto{
     @IsOptional()
     sortBy?: 'type' | 'stock' | 'dailyRate'
 
+    @Transform(({value}) => parseInt(value))
     @IsOptional()
     @IsInt()
     page?: number;
 
+    @Transform(({value}) => parseInt(value))
     @IsOptional()
     @IsInt()
     limit?: number;

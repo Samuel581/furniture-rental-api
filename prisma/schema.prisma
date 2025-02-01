@@ -31,7 +31,7 @@ model Combo {
   id        String  @id @default(uuid())
   name      String
   dailyRate Float
-  isActive  Boolean
+  isActive  Boolean @default(true)
 
   // Relations
   ComboFurniture ComboFurniture[]
