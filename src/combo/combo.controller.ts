@@ -19,16 +19,16 @@ export class ComboController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.comboService.findOne(+id);
+    return this.comboService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateComboDto: UpdateComboDto) {
-    return this.comboService.update(+id, updateComboDto);
+    return this.comboService.update(id, updateComboDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.comboService.remove(+id);
+    return this.comboService.remove(id);
   }
 }

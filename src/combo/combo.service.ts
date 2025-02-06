@@ -82,7 +82,7 @@ export class ComboService {
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} combo`;
   }
 
