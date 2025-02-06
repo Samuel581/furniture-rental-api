@@ -48,16 +48,38 @@ export class ComboService {
     }
   }
 
-  findAll() {
-    return `This action returns all combo`;
+  async findAll() {
+    try {
+      const combos = await this.prisma.combo.findMany({
+        include: {
+          ComboFurniture: {
+            include: {
+              furniture: true
+            }
+          }
+        }
+      });
+      return combos;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} combo`;
+  async findOne(id: string  
+  ) {
+    const combo = await this.prisma.combo.findUnique({
+      where: {
+        id: id
+      }
+    });
+    return combo;
   }
 
-  update(id: number, updateComboDto: UpdateComboDto) {
-    return `This action updates a #${id} combo`;
+  async update(id: string, updateComboDto: UpdateComboDto) {
+    return await this.prisma.combo.update({
+      where: { id: id },
+      data: updateComboDto
+    });
   }
 
   remove(id: number) {
