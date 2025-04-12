@@ -99,7 +99,7 @@ export class RentalService {
           // Check if we have enough stock
           if(furniture.stock < item.quantity){
             throw new BadRequestException(
-              `There is not enought stock for the item with ID ${item.furnitureId}. Required: ${item.quantity}, Aviable: ${furniture.stock}`
+              `There is not enough stock for the item with ID ${item.furnitureId}. Required: ${item.quantity}, Aviable: ${furniture.stock}`
             );
           }
 
@@ -289,6 +289,7 @@ export class RentalService {
     const rental = this.prisma.rental.findUnique({
       where: { id: id },
       include: {
+        client: true,
         rentalItems: {
           include: {
             furniture: true,
@@ -302,7 +303,8 @@ export class RentalService {
               }
             }
           }
-        }
+        },
+        
       }      
     });
     if(!rental){
