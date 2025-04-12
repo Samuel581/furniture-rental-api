@@ -37,7 +37,8 @@ export class RentalService {
             furniture: true,
             combo: true
           }
-        }
+        },
+        client: true
       }
     })
   }
