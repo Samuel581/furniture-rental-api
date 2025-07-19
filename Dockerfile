@@ -19,13 +19,13 @@ RUN yarn prisma generate
 COPY . .
 
 # Build the application (this creates the dist folder)
-RUN yarn build
+#RUN yarn build
 
 # Check if dist folder was created
-RUN ls -la dist/
+#RUN ls -la dist/
 
 # Expose port
 EXPOSE 3001
 
 # Start command
-CMD ["yarn", "start:prod"]
+CMD ["yarn", "start:dev"]
