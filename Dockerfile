@@ -12,8 +12,11 @@ RUN yarn install --frozen-lockfile
 # Copy prisma schema
 COPY prisma ./prisma/
 
-# Generate Prisma client
-RUN yarn prisma generate
+# DEBUG: Check what got copied
+RUN echo "=== Checking prisma folder ==="
+RUN ls -la prisma/
+RUN echo "=== Checking migrations folder ==="
+RUN ls -la prisma/migrations/
 
 # Copy source code
 COPY . .
@@ -26,6 +29,3 @@ COPY . .
 
 # Expose port
 EXPOSE 3001
-
-# Start command
-CMD ["yarn", "start:dev"]
