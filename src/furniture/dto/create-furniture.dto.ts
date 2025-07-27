@@ -1,26 +1,26 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Length, Min } from "class-validator";
 
 export class CreateFurnitureDto {
 
     @ApiProperty({
         description: 'Furniture name',
-        example: 'Silla'
+        example: 'Wood outside chair'
     })
     @IsString()
     @Length(3, 50)
     name: string;
 
     @ApiProperty({
-        description: 'Color of the furniture',
-        example: 'Roja'
+        description: "Furniture's color",
+        example: 'Red Wood'
     })
     @IsString()
     @IsOptional()
     color?: string;
 
     @ApiProperty({
-        description: 'Type of furniture (for filtering)',
+        description: "Furniture's type",
         example: 'Silla'
     })
     @IsString()
@@ -34,8 +34,8 @@ export class CreateFurnitureDto {
     @Min(0)
     stock: number;
 
-    @ApiProperty({
-        description: 'Tells if a furniture is currently active or not',
+    @ApiPropertyOptional({
+        description: 'Indicates whether the furniture item is available for rental. Defaults to true when creating new items.',
         example: true
     })
     @IsBoolean()
@@ -43,7 +43,7 @@ export class CreateFurnitureDto {
     isActive: boolean;
 
     @ApiProperty({
-        description: 'Price for a day of rent',
+        description: 'Price for a day of rent, can be an integer or float point',
         example: 1
     })
     @IsNumber({maxDecimalPlaces: 2})
