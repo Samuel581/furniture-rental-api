@@ -5,7 +5,7 @@ export class CreateFurnitureDto {
 
     @ApiProperty({
         description: 'Furniture name',
-        example: 'Wood outsite chair'
+        example: 'Wood outside chair'
     })
     @IsString()
     @Length(3, 50)
