@@ -339,7 +339,7 @@ export class RentalService {
 
       // Update rental status to cancelled, the deposited amont goes to zero as it asumes that the 
       // client gets refunded
-      const updateRental = tx.rental.update({
+      const updateRental = await tx.rental.update({
         where: {id:id},
         data: { rentalStatus: RentalStatus.CANCELLED, depositAmount: 0}
       })
