@@ -36,4 +36,9 @@ export class RentalController {
   done(@Param('id', ParseUUIDPipe) id: string) {
     return this.rentalService.markDone(id)
   }
+
+  @Patch(':id/cancel')
+  cancel(@Param('id', ParseUUIDPipe) id: string){
+    return this.rentalService.markCanceled(id)
+  }
 }
