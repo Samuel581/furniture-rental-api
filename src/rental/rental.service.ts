@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
 import { PrismaService } from 'src/prisma.service';
 import {  Prisma, RentalStatus } from '@prisma/client';
 import { GetRentalsQueryDto } from './dto/rental-filtering.dto';
@@ -315,9 +314,71 @@ export class RentalService {
   }
 
   //TODO
-  async markCanceled(id: number, updateRentalDto: UpdateRentalDto) {
-    // TODO: Make service
-    return `This action updates a #${id} rental`;
+  async markCanceled(id: string) {
+    const rental = await this.findOne(id);
+
+    if(rental.rentalStatus == RentalStatus.COMPLETED){
+      throw new BadRequestException(
+        `Cannot cancel a rental in ${rental.rentalStatus} status. Rental has been completed`
+      )
+    }
+
+    if(rental.rentalStatus == RentalStatus.DELIVERED){
+      throw new BadRequestException(
+        `Cannot cancel a rental in ${rental.rentalStatus} status. Rental has been DELIVERED`
+      )
+    }
+
+    if(rental.rentalStatus == RentalStatus.CANCELLED){
+      throw new BadRequestException(
+        `Rental already cancelled`
+      )
+    }
+
+    return await this.prisma.$transaction(async (tx) => {
+
+      // Update rental status to cancelled, the deposited amont goes to zero as it asumes that the 
+      // client gets refunded
+      const updateRental = tx.rental.update({
+        where: {id:id},
+        data: { rentalStatus: RentalStatus.CANCELLED, depositAmount: 0}
+      })
+      
+      for(const rentalItem of rental.rentalItems){
+
+        // If it's just a furniture
+        if(rentalItem.furnitureId){
+          // Restock
+          await tx.furniture.update({
+            where: { id: rentalItem.furnitureId},
+            data: {
+              stock: {
+                increment: rentalItem.quantity
+              }
+            }
+          })
+        }
+
+        // If not, its a combo
+        else if(rentalItem.comboId){
+          // Iterate the furnitures in the combo
+          for( const furnitureInCombo of rentalItem.combo.ComboFurniture ){
+            // NOTE: This was a bit buzzy
+            const totalRestockQuantity = rentalItem.quantity * furnitureInCombo.quantity;
+            // Restocking
+            await tx.furniture.update({
+              where: { id: furnitureInCombo.furnitureId },
+              data: {
+                stock: {
+                  increment: totalRestockQuantity,
+                }
+              }
+            })
+          }
+        }
+      }
+      return updateRental;
+    })  
   }
 
 
