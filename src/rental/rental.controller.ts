@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseFloatPipe } from '@nestjs/common';
 import { RentalService } from './rental.service';
 import { CreateRentalDto } from './dto/create-rental.dto';
 import { GetRentalsQueryDto } from './dto/rental-filtering.dto';
@@ -40,5 +40,11 @@ export class RentalController {
   @Patch(':id/cancel')
   cancel(@Param('id', ParseUUIDPipe) id: string){
     return this.rentalService.markCanceled(id)
+  }
+
+  @Patch(':id/deposit/:amount')
+  deposit(@Param('id', ParseUUIDPipe) id: string,
+  @Param('amount',ParseFloatPipe) amount: number){
+    return this.rentalService.addDeposit(id, amount)
   }
 }
