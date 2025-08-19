@@ -381,5 +381,24 @@ export class RentalService {
     })  
   }
 
+  async addDeposit(id: string, amount: number) {
+    const rental = await this.findOne(id);    
+    if (amount <= 0) throw new BadRequestException('Amount must be positive');
+
+    const after = new Prisma.Decimal(rental.depositAmount ?? 0).plus(amount);
+
+    if( after.greaterThan(rental.totalAmount)) throw new BadRequestException('Amount given surpass the total cost of the rental, insert amount after change')
+    
+    return this.prisma.rental.update({
+      where: {id: id},
+      data: {
+        depositAmount: {
+          increment: amount
+        }
+      }
+    })
+    
+  }
+
 
 }
