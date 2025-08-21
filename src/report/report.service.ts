@@ -1,19 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReportDto } from './dto/create-report.dto';
-import { UpdateReportDto } from './dto/update-report.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ReportService {
-  create(createReportDto: CreateReportDto) {
-    return 'This action adds a new report';
+
+  constructor(private prisma: PrismaService){}
+
+  private monthsToDateRange(){
+
   }
 
-  findAll() {
-    return `This action returns all report`;
+  // Count of rentals per current month
+  totalSumRentals() {
+    return this.prisma.rental.count({})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} report`;
+  // Total gains per current month
+  totalSumGainsRentals() {
+    return this.prisma.rental.aggregate({
+      where: {startDate: ""},
+      _sum: {
+        totalAmount: true
+      }
+    })
   }
 
   update(id: number, updateReportDto: UpdateReportDto) {
@@ -23,4 +32,7 @@ export class ReportService {
   remove(id: number) {
     return `This action removes a #${id} report`;
   }
+
+  // TODO: Make function to clasify somehow which month is currently the user
+  
 }

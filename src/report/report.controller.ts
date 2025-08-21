@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ReportService } from './report.service';
+import { PrismaService } from 'src/prisma.service';
 
 
 @Controller('report')
@@ -8,12 +9,12 @@ export class ReportController {
 
   @Get('/all')
   totalRentals() {
-    return this.reportService.findAll();
+    return this.reportService.totalSumRentals();
   }
 
   @Get('totalGains')
   totalGainsCurrentMonth(){
-    // TODO
+    return this.reportService.totalSumGainsRentals();
   }
 
   @Get('/activeUsers')
