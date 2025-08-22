@@ -62,8 +62,10 @@ export class ReportService {
   }
 
   // Count of rentals per current month
-  totalCountOfRentals() {
-    const dateRange = this.getCurrentMonthRange()
+  totalCountOfRentals(month?: MONTH, year?: number) {
+    const dateRange = month && year 
+      ? this.getMonthRange(month, year)
+      : this.getCurrentMonthRange();
 
     return this.prisma.rental.count({
       where: {
@@ -72,17 +74,25 @@ export class ReportService {
           lte: dateRange.endDate
         }
       }
-    })
+    });
   }
 
-  // Total gains per current month
-  totalSumGainsRentals() {
+  totalSumGainsRentals(month?: MONTH, year?: number) {
+    const dateRange = month && year 
+      ? this.getMonthRange(month, year)
+      : this.getCurrentMonthRange();
+      
     return this.prisma.rental.aggregate({
-      where: {},
       _sum: {
         totalAmount: true
+      },
+      where: {
+        startDate: {
+          gte: dateRange.startDate,
+          lte: dateRange.endDate
+        }
       }
-    })
+    });
   }
 
   remove(id: number) {

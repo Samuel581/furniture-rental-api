@@ -1,34 +1,35 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ReportService } from './report.service';
-import { PrismaService } from 'src/prisma.service';
-
+import { ReportQueryDateDto } from './dto/report-query-date.dto';
 
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  @Get('/all')
-  totalRentals() {
-    return this.reportService.totalCountOfRentals();
+  @Get('/rentalsCount')
+  totalRentals(@Query() query: ReportQueryDateDto) {
+    const { month, year } = query;
+    return this.reportService.totalCountOfRentals(month, year);
   }
 
-  @Get('totalGains')
-  totalGainsCurrentMonth(){
-    return this.reportService.totalSumGainsRentals();
+  @Get('/totalGains')
+  totalGainsCurrentMonth(@Query() query: ReportQueryDateDto) {
+    const { month, year } = query;
+    return this.reportService.totalSumGainsRentals(month, year);
   }
 
   @Get('/activeUsers')
-  totalActiveUsers(){
+  totalActiveUsers() {
     // TODO
   }
 
   @Get('/gainsPerYear')
-  totalGainsPerYear(){
+  totalGainsPerYear() {
     // TODO
   }
 
   @Get('bestClients')
-  topBestClients(){
+  topBestClients() {
     // TODO
   }
 }
