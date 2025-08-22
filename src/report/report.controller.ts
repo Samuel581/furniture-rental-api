@@ -9,7 +9,7 @@ export class ReportController {
 
   @Get('/all')
   totalRentals() {
-    return this.reportService.totalSumRentals();
+    return this.reportService.totalCountOfRentals();
   }
 
   @Get('totalGains')

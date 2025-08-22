@@ -17,7 +17,6 @@ export enum MONTH {
   DECEMBER = 12
 }
 
-
 interface MonthRange {
   month: MONTH,
   monthName: string,
@@ -64,7 +63,16 @@ export class ReportService {
 
   // Count of rentals per current month
   totalCountOfRentals() {
-    
+    const dateRange = this.getCurrentMonthRange()
+
+    return this.prisma.rental.count({
+      where: {
+        startDate: {
+          gte: dateRange.startDate,
+          lte: dateRange.endDate
+        }
+      }
+    })
   }
 
   // Total gains per current month
