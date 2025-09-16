@@ -1,136 +1,318 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🪑 Furniture Rental API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive NestJS-based REST API for managing furniture rental services, supporting both individual furniture pieces and predefined furniture sets (combos).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Table of Contents
 
-# Furniture Rental API
+- [Features](#-features)
+- [Technologies](#-technologies)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Database Setup](#-database-setup)
+- [Running the Application](#-running-the-application)
+- [API Documentation](#-api-documentation)
+- [Project Structure](#-project-structure)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-## Description
+## ✨ Features
 
-A NestJS based API for a furniture rental service, supports individial furniture pieces and predefined furniture sets (combos).
+- **Furniture Management**: Complete CRUD operations for furniture inventory
+- **Combo Management**: Predefined furniture sets with individual item tracking
+- **Client Management**: Customer information with location-based data
+- **Rental Lifecycle**: Full rental process from creation to completion
+- **Stock Tracking**: Automatic inventory management with real-time updates
+- **Reporting System**: Analytics and insights for business operations
+- **Location Services**: GPS coordinates and address management for clients
 
-## Features
+## 🛠 Technologies
 
-* Furniture inventory management
-* Combos inventory management
-* Client management
-* Rental lifecycle management
-* Stock tracking 
-* Location-based client information 
+- **Backend**: NestJS (Node.js framework)
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Language**: TypeScript
+- **Validation**: class-validator, class-transformer
+- **Containerization**: Docker
 
-## Tecnologies
-* NestJS
-* PostgreSQL
-* PrismaORM
+## 📋 Prerequisites
 
-## Prerequisites
+Before running this project, ensure you have:
 
-* NodeJS (v18+)
-* PostgreSQL (v13+) (skip if using docker)
-* Docker (optional)
-* npm or yarn 
+- **Node.js** (v18 or higher)
+- **PostgreSQL** (v13 or higher) - *Skip if using Docker*
+- **Docker** (optional, for containerized setup)
+- **npm** or **yarn** package manager
 
-## Installation
+## 🚀 Installation
 
-1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
-git clone [repo_url]
+git clone <repository-url>
+cd furniture-rental-api
 ```
 
-2. Install the dependencies
+### 2. Install Dependencies
 
 ```bash
+# Using yarn (recommended)
 yarn install
-```
-3. Create a `.env` file in the root of the project and add the following environment variables:
 
-```bash
-DATABASE_URL="postgresql://user:password@localhost:5432/furniture_rental"
+# Or using npm
+npm install
 ```
 
-4. Run database migrations
+### 3. Environment Configuration
+
+Create a `.env` file in the root directory:
 
 ```bash
+# Database Configuration
+DATABASE_URL="postgresql://username:password@localhost:5432/furniture_rental_db"
+
+# Application Configuration
+PORT=3000
+NODE_ENV=development
+```
+
+### 4. Database Setup
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Run database migrations
 npx prisma migrate dev
+
+# (Optional) Seed the database
+npx prisma db seed
 ```
 
+## 🗄 Database Setup
 
+The application uses PostgreSQL with Prisma ORM. The database schema includes:
 
-## Project setup
+- **Furniture**: Individual furniture items with stock tracking
+- **Combos**: Predefined furniture sets
+- **Clients**: Customer information with location data
+- **Rentals**: Rental transactions with status tracking
+- **RentalItems**: Junction table for rental-furniture relationships
 
-To install all the needed packages:
+## 🏃‍♂️ Running the Application
+
+### Development Mode
 
 ```bash
-yarn install
-```
-
-## Running the app
-
-```bash
-# development
+# Start with hot reload
 yarn start:dev
 
-# production mode
+# Or with npm
+npm run start:dev
+```
+
+### Production Mode
+
+```bash
+# Build the application
+yarn build
+
+# Start in production mode
 yarn start:prod
 ```
 
-## API endpoints
+### Using Docker
 
-### Furniture
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
 
-* `GET /furniture` - Get all furniture items (supports filtering)
-* `GET /furniture/:id` - Get a single furniture item by ID
-* `POST /furniture` - Create a new furniture item
-* `PATCH /furniture/:id` - Update a furniture item
+# Run in detached mode
+docker-compose up -d
+```
 
-### Combos
+## 📚 API Documentation
 
-* `GET /combos` - Get all combos (supports filtering)
-* `GET /combos/:id` - Get a single combo by ID
-* `POST /combos` - Create a new combo
+### Base URL
+```
+http://localhost:3000
+```
 
-### Clients
+### Authentication
+Currently, the API does not require authentication. This will be added in future versions.
 
-* `GET /clients` - Get all clients (supports filtering)
-* `GET /clients/:id` - Get a single client by ID
-* `POST /clients` - Create a new client
-* `PATCH /clients/:id` - Update a client
+---
 
-### Rentals
+### 🪑 Furniture Endpoints
 
-* `GET /rentals` - Get all rentals (supports filtering)
-* `GET /rentals/client/:id` - Get all rentals for a specific client
-* `GET /rentals/:id` - Get a single rental by ID
-* `POST /rentals` - Create a new rental
-* `PATCH /rentals/:id/deliver` - Mark rental as delivered
-* `PATCH /rentals/:id/done` - Mark rental as done (restocks the items back to inventory)
-* `PATCH /rentals/:id/cancel` - Cancel a rental (restocks the items back to inventory) **(not implemented yet)**
+| Method | Endpoint | Description | Query Parameters |
+|--------|----------|-------------|------------------|
+| `GET` | `/furniture` | Get all furniture items | `type`, `color`, `isActive` |
+| `GET` | `/furniture/:id` | Get furniture by ID | - |
+| `POST` | `/furniture` | Create new furniture | - |
+| `PATCH` | `/furniture/:id` | Update furniture | - |
 
-## Support
+**Example Request:**
+```bash
+GET /furniture?type=chair&color=black&isActive=true
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
+### 🛋 Combo Endpoints
 
-## License
+| Method | Endpoint | Description | Query Parameters |
+|--------|----------|-------------|------------------|
+| `GET` | `/combos` | Get all combos | `isActive` |
+| `GET` | `/combos/:id` | Get combo by ID | - |
+| `POST` | `/combos` | Create new combo | - |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+### 👥 Client Endpoints
+
+| Method | Endpoint | Description | Query Parameters |
+|--------|----------|-------------|------------------|
+| `GET` | `/clients` | Get all clients | `isActive` |
+| `GET` | `/clients/:id` | Get client by ID | - |
+| `POST` | `/clients` | Create new client | - |
+| `PATCH` | `/clients/:id` | Update client | - |
+
+---
+
+### 📋 Rental Endpoints
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| `GET` | `/rentals` | Get all rentals | Query: `status`, `startDate`, `endDate` |
+| `GET` | `/rentals/:id` | Get rental by ID | - |
+| `GET` | `/rentals/client/:id` | Get rentals by client | - |
+| `POST` | `/rentals` | Create new rental | See example below |
+| `PATCH` | `/rentals/:id/deliver` | Mark as delivered | - |
+| `PATCH` | `/rentals/:id/done` | Mark as completed | - |
+| `PATCH` | `/rentals/:id/cancel` | Cancel rental | - |
+| `PATCH` | `/rentals/:id/deposit` | Add deposit amount | `{ "amount": 100 }` |
+
+**Create Rental Example:**
+```json
+{
+  "clientId": "uuid",
+  "startDate": "2024-01-15",
+  "endDate": "2024-01-20",
+  "depositAmount": 200,
+  "notes": "Special delivery instructions",
+  "secondaryDeliveryAddress": "123 Main St",
+  "items": [
+    {
+      "furnitureId": "uuid",
+      "quantity": 2
+    },
+    {
+      "comboId": "uuid",
+      "quantity": 1
+    }
+  ]
+}
+```
+
+---
+
+### 📊 Report Endpoints
+
+| Method | Endpoint | Description | Query Parameters |
+|--------|----------|-------------|------------------|
+| `GET` | `/report/rentalsCount` | Count of rentals | `month`, `year` |
+| `GET` | `/report/totalGains` | Total revenue | `month`, `year` |
+| `GET` | `/report/activeUsers` | Active clients count | - |
+| `GET` | `/report/bestClients` | Top 5 clients by spending | - |
+
+**Report Query Parameters:**
+- `month`: 1-12 (optional)
+- `year`: 2020-2030 (optional)
+
+---
+
+## 🏗 Project Structure
+
+```
+src/
+├── app.module.ts              # Main application module
+├── main.ts                    # Application entry point
+├── prisma.service.ts          # Prisma database service
+├── client/                    # Client management module
+│   ├── client.controller.ts
+│   ├── client.service.ts
+│   ├── dto/                   # Data Transfer Objects
+│   └── entities/              # TypeScript interfaces
+├── furniture/                 # Furniture management module
+├── combo/                     # Combo management module
+├── rental/                    # Rental management module
+└── report/                    # Reporting and analytics module
+```
+
+## 🔧 Development
+
+### Database Migrations
+
+```bash
+# Create a new migration
+npx prisma migrate dev --name migration_name
+
+# Reset database (careful!)
+npx prisma migrate reset
+
+# Deploy migrations to production
+npx prisma migrate deploy
+```
+
+### Code Quality
+
+```bash
+# Lint code
+yarn lint
+
+# Fix linting issues
+yarn lint:fix
+
+# Format code
+yarn format
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Error**
+   - Verify PostgreSQL is running
+   - Check DATABASE_URL in .env file
+   - Ensure database exists
+
+2. **Migration Errors**
+   - Run `npx prisma migrate reset` (development only)
+   - Check for schema conflicts
+
+3. **Port Already in Use**
+   - Change PORT in .env file
+   - Kill existing process: `lsof -ti:3000 | xargs kill`
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact the development team
+- Check the documentation
+
+---
+
+**Made with ❤️ using NestJS**
