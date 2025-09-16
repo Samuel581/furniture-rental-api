@@ -62,12 +62,12 @@ export class ReportService {
   }
 
   // Count of rentals per current month
-  totalCountOfRentals(month?: MONTH, year?: number) {
+  async totalCountOfRentals(month?: MONTH, year?: number) {
     const dateRange = month && year 
       ? this.getMonthRange(month, year)
       : this.getCurrentMonthRange();
 
-    return this.prisma.rental.count({
+    return await this.prisma.rental.count({
       where: {
         startDate: {
           gte: dateRange.startDate,
@@ -77,12 +77,13 @@ export class ReportService {
     });
   }
 
-  totalSumGainsRentals(month?: MONTH, year?: number) {
+  // Total gains per month
+  async totalSumGainsRentals(month?: MONTH, year?: number) {
     const dateRange = month && year 
       ? this.getMonthRange(month, year)
       : this.getCurrentMonthRange();
       
-    return this.prisma.rental.aggregate({
+    return await this.prisma.rental.aggregate({
       _sum: {
         totalAmount: true
       },
@@ -95,10 +96,58 @@ export class ReportService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} report`;
+  async activeUsers(){
+    return await this.prisma.client.findMany({
+      where: {
+        isActive: true
+      }
+    })
   }
 
-  // TODO: Make function to clasify somehow which month is currently the user
-  
+  async topUsers(){
+    // Get top 5 client IDs with their total amounts
+    const topClients = await this.prisma.rental.groupBy({
+      by: ['clientId'],
+      where: {
+        rentalStatus: 'COMPLETED'
+      },
+      _sum: {
+        totalAmount: true
+      },
+      orderBy: {
+        _sum: {
+          totalAmount: 'desc'
+        }
+      },
+      take: 5
+    });
+
+    // Get client details for each top client
+    const clientsDetails = await Promise.all(
+      topClients.map(async (client) => {
+        const clientInfo = await this.prisma.client.findUnique({
+          where: { id: client.clientId },
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+            addressReference: true
+          }
+        });
+
+        return {
+          client: clientInfo,
+          totalSpent: client._sum.totalAmount,
+          rentalCount: await this.prisma.rental.count({
+            where: {
+              clientId: client.clientId,
+              rentalStatus: 'COMPLETED'
+            }
+          })
+        };
+      })
+    );
+
+    return clientsDetails;
+  }  
 }

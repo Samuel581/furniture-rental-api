@@ -20,16 +20,11 @@ export class ReportController {
 
   @Get('/activeUsers')
   totalActiveUsers() {
-    // TODO
-  }
-
-  @Get('/gainsPerYear')
-  totalGainsPerYear() {
-    // TODO
+    return this.reportService.activeUsers();
   }
 
   @Get('bestClients')
-  topBestClients() {
-    // TODO
+  async topBestClients() {
+    return this.reportService.topUsers();
   }
 }
