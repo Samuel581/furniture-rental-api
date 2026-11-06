@@ -30,6 +30,7 @@ Use `yarn`. `README.md`, `render.yaml`, and `docker-compose.yaml` all drive it. 
 
 ## Work process
 
+- Feature branches target **`development`**, not `main`. `main` is only updated via `development → main` merge PRs (the repo's default branch is `main`, so `gh pr create` will get this wrong unless you pass `--base development`).
 - Issues live in GitHub (Samuel581/furniture-rental-api), operated via the `gh` CLI. Conventions and label vocabulary: see `CLAUDE.md` and `docs/agents/{issue-tracker,triage-labels}.md`.
 - **Read `docs/issue-plan.md` before picking up work** — it encodes issue dependency order. The lifecycle chain (#19 → #27 → #21 → #20 → #22) must go in order; the "Independent" items can run in parallel.
 - Domain vocabulary and ADRs: see `docs/agents/domain.md`. `GLOSSARY.md` and `docs/adr/` do not exist yet — proceed silently rather than creating them upfront.
