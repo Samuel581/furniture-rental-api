@@ -3,6 +3,12 @@
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
+  "globalSetup": "<rootDir>/global-setup.ts",
+  "setupFiles": ["<rootDir>/setup-env.ts"],
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1",
+    "^@nestjs/mapped-types$": "<rootDir>/mapped-types.stub.ts"
+  },
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   }
