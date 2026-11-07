@@ -28,6 +28,15 @@ Use `yarn`. `README.md`, `render.yaml`, and `docker-compose.yaml` all drive it. 
 - Money is Prisma `Decimal @db.Decimal(10, 2)` on `Rental`/`Furniture`; `Combo.dailyRate` is `Float`. Comparing `Decimal` with `<`/`>` compares objects (bug #22) — use `Prisma.Decimal`.
 - Rental `create`/`markDone`/`markCanceled` wrap stock changes in `$transaction`; the restock loop is copy-pasted between `markDone` and `markCanceled` (see #20).
 
+## Navigating the codebase
+
+Prefer the knowledge graph over reading files one by one. A graph of this repo lives in `graphify-out/` — `graph.html` (interactive), `graph.json` (raw data), and `GRAPH_REPORT.md` (audit summary).
+
+- Ask the graph first: `graphify query "<question>"` (e.g. "what calls RentalService?", "trace stock changes in markDone"). It returns a scoped subgraph faster than grepping raw files.
+- Use `GRAPH_REPORT.md` for broad architecture (communities, god nodes, cross-cutting connections) and `graph.html` for point-and-click exploration.
+
+When starting work on a module, confirm the graph actually covers it. If it's thin, stale, or misses part of that module (e.g. a migration `.sql` that isn't modeled), rebuild it for that subtree before diving in — `graphify src/<module>` (or `graphify <path> --update` to refresh only changed files) — then consult the refreshed graph instead of paging through files.
+
 ## Work process
 
 - Feature branches target **`development`**, not `main`. `main` is only updated via `development → main` merge PRs (the repo's default branch is `main`, so `gh pr create` will get this wrong unless you pass `--base development`).
