@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateComboDto } from './dto/create-combo.dto';
 import { UpdateComboDto } from './dto/update-combo.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -42,7 +42,7 @@ export class ComboService {
       return combo;
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new BadRequestException('A combo with this name already exists');
+        throw new ConflictException('A combo with this name already exists');
       }
       throw error;
     }
@@ -72,14 +72,26 @@ export class ComboService {
         id: id
       }
     });
+
+    if (!combo) {
+      throw new NotFoundException(`Combo with id ${id} not found`);
+    }
+
     return combo;
   }
 
   async update(id: string, updateComboDto: UpdateComboDto) {
-    return await this.prisma.combo.update({
-      where: { id: id },
-      data: updateComboDto
-    });
+    try {
+      return await this.prisma.combo.update({
+        where: { id: id },
+        data: updateComboDto
+      });
+    } catch (error) {
+      if (error?.code === 'P2025') {
+        throw new NotFoundException(`Combo with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 
   remove(id: string) {
