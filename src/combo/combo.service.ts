@@ -94,8 +94,20 @@ export class ComboService {
     }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} combo`;
+  async remove(id: string) {
+    try {
+      return await this.prisma.combo.update({
+        where: { id: id },
+        data: {
+          isActive: false,
+        }
+      });
+    } catch (error) {
+      if (error?.code === 'P2025') {
+        throw new NotFoundException(`Combo with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 
   private async validateFurnitureItems(items: CreateComboDto['furnitureItems']){
