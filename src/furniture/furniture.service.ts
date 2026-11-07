@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFurnitureDto } from './dto/create-furniture.dto';
 import { UpdateFurnitureDto } from './dto/update-furniture.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -61,24 +61,44 @@ export class FurnitureService {
   }
 
   async findOne(id: string) {
-    return this.prisma.furniture.findUnique({
+    const furniture = await this.prisma.furniture.findUnique({
       where: {id}
     });
+
+    if (!furniture) {
+      throw new NotFoundException(`Furniture with id ${id} not found`);
+    }
+
+    return furniture;
   }
 
   async update(id: string, updateFurnitureDto: UpdateFurnitureDto) {
-    return this.prisma.furniture.update({
-      where: { id },
-      data: { ...updateFurnitureDto }
-    });
+    try {
+      return await this.prisma.furniture.update({
+        where: { id },
+        data: { ...updateFurnitureDto }
+      });
+    } catch (error) {
+      if (error?.code === 'P2025') {
+        throw new NotFoundException(`Furniture with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 
   async remove(id: string) {
-    return this.prisma.furniture.update({
-      where: { id },
-      data: {
-        isActive: false,
+    try {
+      return await this.prisma.furniture.update({
+        where: { id },
+        data: {
+          isActive: false,
+        }
+      });
+    } catch (error) {
+      if (error?.code === 'P2025') {
+        throw new NotFoundException(`Furniture with id ${id} not found`);
       }
-    });
+      throw error;
+    }
   }
 }
