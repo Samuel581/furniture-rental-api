@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { FurnitureService } from './furniture.service';
 import { CreateFurnitureDto } from './dto/create-furniture.dto';
 import { UpdateFurnitureDto } from './dto/update-furniture.dto';
@@ -43,7 +43,7 @@ export class FurnitureController {
     return this.furnitureService.update(id, updateFurnitureDto);
   }
 
-  @Patch(':id')
+  @Delete(':id')
   @ApiOperation({summary: 'Mark furniture as unactive'})
   makeNotActive(@Param('id', ParseUUIDPipe) id: string) {
     return this.furnitureService.remove(id);
