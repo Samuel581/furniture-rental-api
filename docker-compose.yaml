@@ -21,7 +21,7 @@ services:
 
   api:
     build: .
-    command: sh -c "yarn prisma migrate deploy && yarn prisma generate && yarn start:dev"
+    command: sh -c "pnpm prisma:migrate-deploy && pnpm prisma:generate && pnpm dev"
     ports:
       - '3001:3001'
     env_file:
