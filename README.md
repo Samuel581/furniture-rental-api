@@ -41,7 +41,7 @@ Before running this project, ensure you have:
 - **Node.js** (v18 or higher)
 - **PostgreSQL** (v13 or higher) - *Skip if using Docker*
 - **Docker** (optional, for containerized setup)
-- **npm** or **yarn** package manager
+- **pnpm 10.34.9** (version pinned in `package.json`; install with `npm install -g pnpm@10.34.9` if needed)
 
 ## 🚀 Installation
 
@@ -55,11 +55,7 @@ cd furniture-rental-api
 ### 2. Install Dependencies
 
 ```bash
-# Using yarn (recommended)
-yarn install
-
-# Or using npm
-npm install
+pnpm install --frozen-lockfile
 ```
 
 ### 3. Environment Configuration
@@ -79,13 +75,13 @@ NODE_ENV=development
 
 ```bash
 # Generate Prisma client
-npx prisma generate
+pnpm prisma:generate
 
 # Run database migrations
-npx prisma migrate dev
+pnpm prisma:migrate-dev
 
 # (Optional) Seed the database
-npx prisma db seed
+pnpm prisma:seed
 ```
 
 ## 🗄 Database Setup
@@ -104,20 +100,17 @@ The application uses PostgreSQL with Prisma ORM. The database schema includes:
 
 ```bash
 # Start with hot reload
-yarn start:dev
-
-# Or with npm
-npm run start:dev
+pnpm dev
 ```
 
 ### Production Mode
 
 ```bash
 # Build the application
-yarn build
+pnpm build
 
 # Start in production mode
-yarn start:prod
+pnpm start:prod
 ```
 
 ### Using Docker
@@ -255,26 +248,23 @@ src/
 
 ```bash
 # Create a new migration
-npx prisma migrate dev --name migration_name
+pnpm prisma:migrate-dev --name migration_name
 
 # Reset database (careful!)
-npx prisma migrate reset
+pnpm prisma:migrate-reset
 
 # Deploy migrations to production
-npx prisma migrate deploy
+pnpm prisma:migrate-deploy
 ```
 
 ### Code Quality
 
 ```bash
 # Lint code
-yarn lint
-
-# Fix linting issues
-yarn lint:fix
+pnpm lint
 
 # Format code
-yarn format
+pnpm format
 ```
 
 ## 🐛 Troubleshooting
@@ -287,7 +277,7 @@ yarn format
    - Ensure database exists
 
 2. **Migration Errors**
-   - Run `npx prisma migrate reset` (development only)
+   - Run `pnpm prisma:migrate-reset` (development only)
    - Check for schema conflicts
 
 3. **Port Already in Use**

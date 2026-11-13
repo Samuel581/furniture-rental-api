@@ -2,18 +2,19 @@
 
 NestJS 10 + Prisma 6 + PostgreSQL REST API (TypeScript). Standard Nest layout: one module per domain under `src/` — `client`, `combo`, `furniture`, `rental`, `report`.
 
-## Package manager: yarn
+## Package manager: pnpm
 
-Use `yarn`. `README.md`, `render.yaml`, and `docker-compose.yaml` all drive it. `pnpm-lock.yaml` and `pnpm-workspace.yaml` also exist but are stale — do not run `pnpm install` or switch package managers.
+Use the pnpm version pinned in `package.json` and commit `pnpm-lock.yaml` changes.
+Long commands are allowed, but provide a short package-script alias for recurring commands. Use names such as `dev`, `build`, `prisma:generate`, and `prisma:migrate-reset`.
 
 ## Commands
 
-- `yarn start:dev` — hot-reload server (port `PORT` or 3000)
-- `yarn build && yarn start:prod` — build then run `dist/main`
-- `yarn lint` — eslint (runs with `--fix`)
-- `yarn test` — jest unit tests (`*.spec.ts` under `src/`); no DB needed
-- `yarn test:e2e` — supertest e2e (`test/*.e2e-spec.ts`); **needs a reachable Postgres** (booting `AppModule` instantiates `PrismaService`, which calls `$connect()` on init)
-- `npx prisma migrate dev` / `npx prisma generate`
+- `pnpm dev` — hot-reload server (port `PORT` or 3000)
+- `pnpm build && pnpm start:prod` — build then run `dist/main`
+- `pnpm lint` — eslint (runs with `--fix`)
+- `pnpm test` — jest unit tests (`*.spec.ts` under `src/`); no DB needed
+- `pnpm test:e2e` — supertest e2e (`test/*.e2e-spec.ts`); **needs a reachable Postgres** (booting `AppModule` instantiates `PrismaService`, which calls `$connect()` on init)
+- `pnpm prisma:migrate-dev` / `pnpm prisma:generate`
 
 ## Setup / env
 
