@@ -1,8 +1,9 @@
 import { Type, Transform } from "class-transformer";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 
 
-enum SortOrder{
+export enum SortOrder{
     ASC = 'asc',
     DESC = 'desc'
 }
@@ -27,6 +28,11 @@ export class GetFurnituresQueryDto{
     @IsEnum(SortOrder)
     orderBy?: SortOrder;
 
+    @ApiPropertyOptional({
+        description: 'Field used to sort the results',
+        enum: ['type', 'stock', 'dailyRate'],
+        example: 'stock',
+    })
     @IsOptional()
     sortBy?: 'type' | 'stock' | 'dailyRate'
 

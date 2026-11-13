@@ -10,7 +10,11 @@ async function bootstrap() {
   .setTitle('Furniture Rentals API')
   .setDescription('  This API allows users to browse, rent, and manage furniture rentals. It provides endpoints for viewing available furniture, creating rental orders, updating rental details, and deleting rentals. The API ensures secure and efficient management of furniture rental operations.')
   .setVersion('1.0')
-  .addTag('rental')
+  .addTag('client', 'Client management')
+  .addTag('furniture', 'Furniture inventory')
+  .addTag('combo', 'Combo packages')
+  .addTag('rental', 'Rental lifecycle')
+  .addTag('report', 'Reporting and metrics')
   .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

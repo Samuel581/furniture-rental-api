@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRentalDto } from './dto/create-rental.dto';
 import { PrismaService } from 'src/prisma.service';
 import {  Prisma, RentalStatus } from '@prisma/client';
@@ -213,12 +213,19 @@ export class RentalService {
   }
 
   async markDelivered(id: string){
-    return this.prisma.rental.update({
-      where: { id: id },
-      data: {
-        rentalStatus: RentalStatus.DELIVERED
+    try {
+      return await this.prisma.rental.update({
+        where: { id: id },
+        data: {
+          rentalStatus: RentalStatus.DELIVERED
+        }
+      })
+    } catch (error) {
+      if (error?.code === 'P2025') {
+        throw new NotFoundException(`Rental with id ${id} not found`);
       }
-    })
+      throw error;
+    }
   }
 
   async markDone(id: string){
@@ -308,7 +315,7 @@ export class RentalService {
       }      
     });
     if(!rental){
-      throw new BadRequestException(`Rental with id ${id} not found`)
+      throw new NotFoundException(`Rental with id ${id} not found`)
     } 
     return rental;
   }

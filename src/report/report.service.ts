@@ -74,7 +74,7 @@ export class ReportService {
           lte: dateRange.endDate
         }
       }
-    });
+    }).then((totalRentals) => ({ totalRentals }));
   }
 
   // Total gains per month
@@ -83,7 +83,7 @@ export class ReportService {
       ? this.getMonthRange(month, year)
       : this.getCurrentMonthRange();
       
-    return await this.prisma.rental.aggregate({
+    const result = await this.prisma.rental.aggregate({
       _sum: {
         totalAmount: true
       },
@@ -94,6 +94,7 @@ export class ReportService {
         }
       }
     });
+    return { totalGains: result._sum.totalAmount?.toString() ?? '0.00' };
   }
 
   async activeUsers(){
@@ -137,7 +138,7 @@ export class ReportService {
 
         return {
           client: clientInfo,
-          totalSpent: client._sum.totalAmount,
+          totalSpent: client._sum.totalAmount?.toString() ?? '0.00',
           rentalCount: await this.prisma.rental.count({
             where: {
               clientId: client.clientId,
