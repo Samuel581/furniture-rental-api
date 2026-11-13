@@ -242,6 +242,33 @@ src/
 └── report/                    # Reporting and analytics module
 ```
 
+## 🧪 Testing
+
+The integration test suite exercises the rental lifecycle (stock decrement on
+rent, restock on cancel, and the paid-in-full check) against a **dedicated test
+database** — never your dev `DATABASE_URL`.
+
+### One-time setup
+
+1. Create a test database (e.g. `furniture_rental_test`).
+2. Create `.env.test` in the repo root:
+
+   ```bash
+   DATABASE_URL="postgresql://postgres:password@localhost:5432/furniture_rental_test"
+   ```
+
+### Run
+
+```bash
+yarn test:e2e
+```
+
+This applies pending migrations to the test database, then runs the suite. It
+truncates the tables between tests, so the test database is throwaway-safe.
+
+> One test is marked `it.failing` (partial payment). It is an *expected* failure
+> until the paid-in-full check is fixed.
+
 ## 🔧 Development
 
 ### Database Migrations
