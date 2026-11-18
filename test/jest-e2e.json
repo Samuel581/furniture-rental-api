@@ -1,9 +1,1 @@
-{
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
-  "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
-  "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
-}
+{"moduleFileExtensions": ["js", "json", "ts"], "rootDir": "..", "testEnvironment": "node", "testRegex": ".e2e-spec.ts$", "transform": {"^.+\\.(t|j)s$": "ts-jest"}, "moduleNameMapper": {"^src/(.*)$": "<rootDir>/src/$1", "^@nestjs/mapped-types$": "<rootDir>/node_modules/.pnpm/@nestjs+mapped-types@2.1.1_@nestjs+common@10.4.22_class-transformer@0.5.1_class-validat_2ef575c51bcee7282c5057356ce80f0f/node_modules/@nestjs/mapped-types/dist/index.js"}}
