@@ -96,10 +96,16 @@ export class RentalService {
             throw new BadRequestException(`Furniture with ID ${item.furnitureId} not found or inactive`);
           }
 
-          // Check if we have enough stock
-          if(furniture.stock < item.quantity){
+          // Check if we have enough stock and decrement atomically
+          const updated = await tx.furniture.updateMany({
+            where: { id: item.furnitureId, stock: { gte: item.quantity } },
+            data: { stock: { decrement: item.quantity } },
+          });
+
+          if (updated.count === 0) {
+            const current = await tx.furniture.findUnique({ where: { id: item.furnitureId } });
             throw new BadRequestException(
-              `There is not enough stock for the item with ID ${item.furnitureId}. Required: ${item.quantity}, Aviable: ${furniture.stock}`
+              `There is not enough stock for the item with ID ${item.furnitureId}. Required: ${item.quantity}, Available: ${current?.stock ?? 0}`
             );
           }
 
@@ -111,12 +117,6 @@ export class RentalService {
           rentalItemsData.push({
             furnitureId: item.furnitureId,
             quantity: item.quantity, 
-          })
-
-          // Update the stock of the furniture if all the transactions till this point where succesfull
-          await tx.furniture.update({
-            where: { id: item.furnitureId },
-            data: { stock: furniture.stock - item.quantity}
           })
         }
         // If the item is not a furniture per se, then is a combo and we check if it's valid an if there is stock
@@ -130,22 +130,6 @@ export class RentalService {
             throw new BadRequestException(`The combo with id ${item.comboId} is not valid`);
           }
 
-          // Check item by item on the combo's furnitures to check if there is enough stock for the combos needed
-          for(const furnitureInCombo of selectedCombo.ComboFurniture){
-            const quantityPerCombo: number = furnitureInCombo.quantity;
-            const numberOfCombosRequested: number = item.quantity;
-            const totalFurnitureNeeded: number = quantityPerCombo * numberOfCombosRequested;
-            const aviableStockOfFurniture: number = furnitureInCombo.furniture.stock;
-
-            if( aviableStockOfFurniture < totalFurnitureNeeded ){
-              throw new BadRequestException(
-                `Insufficient stock for ${furnitureInCombo.furniture.name} in combo ${selectedCombo.name}. ` +
-                `Need ${totalFurnitureNeeded} (${quantityPerCombo} per combo × ${numberOfCombosRequested} combos), ` +
-                `but only ${aviableStockOfFurniture} available`
-              );
-            }
-          }
-
           // Calculate total of combo
           const comboTotal = selectedCombo.dailyRate * item.quantity * durationInDays;
           totalAmount += comboTotal;
@@ -157,13 +141,26 @@ export class RentalService {
             comboId: item.comboId
           })
 
-          // If the process didn't get interrupted them we update the stock on the furnitures that make the combo
-          for( const furnitureInCombo of selectedCombo.ComboFurniture){
+          // Atomically decrement stock for each furniture in the combo
+          for (const furnitureInCombo of selectedCombo.ComboFurniture) {
             const totalStockNeeded: number = furnitureInCombo.quantity * item.quantity;
-            await tx.furniture.update({
-              where: { id: furnitureInCombo.furniture.id },
-              data: { stock: furnitureInCombo.furniture.stock - totalStockNeeded}
-            })
+            const updated = await tx.furniture.updateMany({
+              where: {
+                id: furnitureInCombo.furniture.id,
+                stock: { gte: totalStockNeeded },
+                isActive: true,
+              },
+              data: { stock: { decrement: totalStockNeeded } },
+            });
+
+            if (updated.count === 0) {
+              const current = await tx.furniture.findUnique({ where: { id: furnitureInCombo.furniture.id } });
+              throw new BadRequestException(
+                `Insufficient stock for ${furnitureInCombo.furniture.name} in combo ${selectedCombo.name}. ` +
+                `Need ${totalStockNeeded} (${furnitureInCombo.quantity} per combo × ${item.quantity} combos), ` +
+                `but only ${current?.stock ?? 0} available`
+              );
+            }
           }
         } else {
           throw new BadRequestException('Invalid rental item: must specify either furnitureId or comboId');
